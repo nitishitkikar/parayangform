@@ -18,7 +18,7 @@
     <p id="message"></p>
 
     <script>
-        const scriptUrl = "YOUR_GOOGLE_SCRIPT_URL"; // Replace with your Google Apps Script URL
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbxcmmUg9GcYf4u19cJIFmnqCqrZZytTnd0MVJbtss2g8Ed44uyEHWqoN7uBYGq2zXit/exec"; // Replace with your Google Apps Script URL
         
         async function loadSaturdays() {
             let response = await fetch(scriptUrl + "?action=getAvailableSaturdays");
