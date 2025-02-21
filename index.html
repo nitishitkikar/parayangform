@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book a Saturday</title>
+</head>
+<body>
+    <h2>Enter Your Name & Pick a Saturday</h2>
+    <form id="bookingForm">
+        <label>Name:</label>
+        <input type="text" id="name" required><br><br>
+        
+        <label>Select a Date:</label>
+        <select id="date" required></select><br><br>
+        
+        <button type="submit">Book</button>
+    </form>
+    
+    <p id="message"></p>
+
+    <script>
+        const scriptUrl = "YOUR_GOOGLE_SCRIPT_URL"; // Replace with your Google Apps Script URL
+        
+        async function loadSaturdays() {
+            let response = await fetch(scriptUrl + "?action=getAvailableSaturdays");
+            let dates = await response.json();
+            
+            let select = document.getElementById("date");
+            select.innerHTML = "";
+            dates.forEach(date => {
+                let option = document.createElement("option");
+                option.value = date;
+                option.textContent = date;
+                select.appendChild(option);
+            });
+        }
+
+        document.getElementById("bookingForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            let name = document.getElementById("name").value.trim();
+            let date = document.getElementById("date").value;
+
+            if (!name || !date) {
+                document.getElementById("message").textContent = "Please enter all details.";
+                return;
+            }
+
+            let response = await fetch(scriptUrl, {
+                method: "POST",
+                body: JSON.stringify({ name: name, date: date }),
+                headers: { "Content-Type": "application/json" }
+            });
+
+            let result = await response.json();
+            document.getElementById("message").textContent = result.message;
+            
+            if (result.status === "success") {
+                loadSaturdays(); // Refresh available dates
+            }
+        });
+
+        window.onload = loadSaturdays;
+    </script>
+</body>
+</html>
